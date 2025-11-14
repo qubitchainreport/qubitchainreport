@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumLightning - Monthly Reports</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #2d1b4e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 191, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #8a2be2 0%, #00bfff 50%, #ff00ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.5));
+            }
+            to {
+                filter: drop-shadow(0 0 20px rgba(0, 191, 255, 0.8));
+            }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            margin-top: 10px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(138, 43, 226, 0.1);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 20px 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(138, 43, 226, 0.6);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+            margin-top: 5px;
+        }
+
+        .year-section {
+            margin-bottom: 50px;
+        }
+
+        .year-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px 20px;
+            background: rgba(138, 43, 226, 0.15);
+            border-left: 4px solid #8a2be2;
+            border-radius: 10px;
+        }
+
+        .year-title {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .year-badge {
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .report-card {
+            background: rgba(26, 31, 58, 0.6);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .report-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .report-card:hover::before {
+            left: 100%;
+        }
+
+        .report-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(138, 43, 226, 0.8);
+            box-shadow: 0 15px 40px rgba(138, 43, 226, 0.4);
+        }
+
+        .report-date {
+            font-size: 0.85rem;
+            color: #00bfff;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .report-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.5;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .report-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #8a2be2;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .report-link:hover {
+            color: #00bfff;
+            gap: 12px;
+        }
+
+        .report-link::after {
+            content: '→';
+            transition: transform 0.3s ease;
+        }
+
+        .report-link:hover::after {
+            transform: translateX(5px);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            color: #b0b0b0;
+            border-top: 1px solid rgba(138, 43, 226, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                gap: 15px;
+            }
+
+            .stat-card {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ QuantumLightning</h1>
+            <p class="subtitle">Monthly Report Archive</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">60</div>
+                <div class="stat-label">Reports</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Years</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2021-2025</div>
+                <div class="stat-label">Period</div>
+            </div>
+        </div>
+
+        <div class="year-section">
+            <div class="year-header">
+                <div class="year-title">2021</div>
+                <div class="year-badge">Foundation Research & Seed</div>
+            </div>
+            <div class="reports-grid">
+                <div class="report-card" onclick="window.location.href='reports/2021-01.html'">
+                    <div class="report-date">January 2021</div>
+                    <div class="report-title">Foundation: Tackling Lightning Network Optimization with Quantum Computing</div>
+                    <a href="reports/2021-01.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2021-02.html'">
+                    <div class="report-date">February 2021</div>
+                    <div class="report-title">R&D Update: Establishing Mathematical Foundation of LN-QUBO v0.1</div>
+                    <a href="reports/2021-02.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2021-03.html'">
+                    <div class="report-date">March 2021</div>
+                    <div class="report-title">Infrastructure: Cloud Access to D-Wave Advantage and Initial Testing Complete</div>
+                    <a href="reports/2021-03.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2021-04.html'">
+                    <div class="report-date">April 2021</div>
+                    <div class="report-title">Development Progress: LN Simulator v0.1 (100 Nodes) Development Started</div>
+                    <a href="reports/2021-04.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2021-05.html'">
+                    <div class="report-date">May 2021</div>
+                    <div class="report-title">Milestone: LN Simulator v0.1 Operational</div>
+                    <a href="reports/2021-05.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2021-06.html'">
+                    <div class="report-date">June 2021</div>
+                    <div class="report-title">Benchmark Update: Simulation Implementation and Initial Results of QUBO v0.1 Model</div>
+                    <a href="reports/2021-06.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2021-07.html'">
+                    <div class="report-date">July 2021</div>
+                    <div class="report-title">R&D Update: Comparative Analysis with Classical Algorithms on Small Networks</div>
+                    <a href="reports/2021-07.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2021-08.html'">
+                    <div class="report-date">August 2021</div>
+                    <div class="report-title">Analysis Report: Simulation Results (30% Fee Reduction) and Outlook for Next Model v0.2</div>
+                    <a href="reports/2021-08.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2021-09.html'">
+                    <div class="report-date">September 2021</div>
+                    <div class="report-title">R&D Plan: Design Start of LN-QUBO v0.2 (Liquidity Constraint Introduction)</div>
+                    <a href="reports/2021-09.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2021-10.html'">
+                    <div class="report-date">October 2021</div>
+                    <div class="report-title">Infrastructure Update: Expansion to Simulator v0.2 (1,000 Nodes) Complete</div>
+                    <a href="reports/2021-10.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2021-11.html'">
+                    <div class="report-date">November 2021</div>
+                    <div class="report-title">Business Milestone: Seed Round ($3M) Closed with Tailwind from Taproot</div>
+                    <a href="reports/2021-11.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2021-12.html'">
+                    <div class="report-date">December 2021</div>
+                    <div class="report-title">2021 Summary and 2022 Roadmap: From Theory to Large-Scale Simulation</div>
+                    <a href="reports/2021-12.html" class="report-link">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="year-section">
+            <div class="year-header">
+                <div class="year-title">2022</div>
+                <div class="year-badge">Simulation & Benchmark</div>
+            </div>
+            <div class="reports-grid">
+                <div class="report-card" onclick="window.location.href='reports/2022-01.html'">
+                    <div class="report-date">January 2022</div>
+                    <div class="report-title">2022 Kickoff: Implementation Start of LN-QUBO v0.2 (Liquidity Constraints)</div>
+                    <a href="reports/2022-01.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2022-02.html'">
+                    <div class="report-date">February 2022</div>
+                    <div class="report-title">R&D Update: Introduction and Evaluation of D-Wave Hybrid Solver</div>
+                    <a href="reports/2022-02.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2022-03.html'">
+                    <div class="report-date">March 2022</div>
+                    <div class="report-title">Milestone: LN-QUBO v0.2 Implementation Complete, Simulator v0.3 (10,000 Nodes) Operational</div>
+                    <a href="reports/2022-03.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2022-04.html'">
+                    <div class="report-date">April 2022</div>
+                    <div class="report-title">Simulation Start: Stress Test of v0.2 Model on 10,000-Node Network</div>
+                    <a href="reports/2022-04.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2022-05.html'">
+                    <div class="report-date">May 2022</div>
+                    <div class="report-title">Analysis Report: Significant Improvement in Liquidity Depletion Rate with v0.2 Model Confirmed</div>
+                    <a href="reports/2022-05.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2022-06.html'">
+                    <div class="report-date">June 2022</div>
+                    <div class="report-title">R&D Plan: Design Start of LN-QUBO v1.0 (Reliability & Rebalancing Terms)</div>
+                    <a href="reports/2022-06.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2022-07.html'">
+                    <div class="report-date">July 2022</div>
+                    <div class="report-title">Technical Report: Mathematical Definition of v1.0 Core 'Rebalancing Hamiltonian'</div>
+                    <a href="reports/2022-07.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2022-08.html'">
+                    <div class="report-date">August 2022</div>
+                    <div class="report-title">R&D Update: Implementation and Debugging of v1.0 Model</div>
+                    <a href="reports/2022-08.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2022-09.html'">
+                    <div class="report-date">September 2022</div>
+                    <div class="report-title">Academic Achievement: Presentation of v0.2 Research Results at IEEE Blockchain 2022</div>
+                    <a href="reports/2022-09.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2022-10.html'">
+                    <div class="report-date">October 2022</div>
+                    <div class="report-title">Benchmark Start: LN-QUBO v1.0 vs Classical Algorithms (LND Mission Control)</div>
+                    <a href="reports/2022-10.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2022-11.html'">
+                    <div class="report-date">November 2022</div>
+                    <div class="report-title">Benchmark Update: v1.0 Achieves 60% Improvement in Large Payment Success Rate</div>
+                    <a href="reports/2022-11.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2022-12.html'">
+                    <div class="report-date">December 2022</div>
+                    <div class="report-title">2022 Summary: Theoretical Superiority of Quantum Hybrid Approach Demonstrated</div>
+                    <a href="reports/2022-12.html" class="report-link">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="year-section">
+            <div class="year-header">
+                <div class="year-title">2023</div>
+                <div class="year-badge">VC Winter & Strategic Pivot</div>
+            </div>
+            <div class="reports-grid">
+                <div class="report-card" onclick="window.location.href='reports/2023-01.html'">
+                    <div class="report-date">January 2023</div>
+                    <div class="report-title">Academic Achievement: Submission of LN-QUBO v1.0 (Full Spec) Paper to Academic Journal</div>
+                    <a href="reports/2023-01.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2023-02.html'">
+                    <div class="report-date">February 2023</div>
+                    <div class="report-title">Market Analysis: Impact of VC Winter and Series A Strategy Review</div>
+                    <a href="reports/2023-02.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2023-03.html'">
+                    <div class="report-date">March 2023</div>
+                    <div class="report-title">Strategic Focus: We Are a 'Quantum AI' Company</div>
+                    <a href="reports/2023-03.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2023-04.html'">
+                    <div class="report-date">April 2023</div>
+                    <div class="report-title">R&D Update: Analysis of BRC-20 Congestion Data and Fee Optimization Model Enhancement</div>
+                    <a href="reports/2023-04.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2023-05.html'">
+                    <div class="report-date">May 2023</div>
+                    <div class="report-title">Market Insight: BRC-20 Congestion Proved the Necessity of Our 'Optimization Engine'</div>
+                    <a href="reports/2023-05.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2023-06.html'">
+                    <div class="report-date">June 2023</div>
+                    <div class="report-title">Market Opportunity: Emergence of Taproot Assets (Taro) and Multi-Asset Routing Challenges</div>
+                    <a href="reports/2023-06.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2023-07.html'">
+                    <div class="report-date">July 2023</div>
+                    <div class="report-title">R&D Plan: Foundation Design Start of LN-QUBO v1.5 (Multi-Asset Support)</div>
+                    <a href="reports/2023-07.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2023-08.html'">
+                    <div class="report-date">August 2023</div>
+                    <div class="report-title">R&D Update: Theoretical Formulation of v1.5 (Multi-Asset Hamiltonian)</div>
+                    <a href="reports/2023-08.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2023-09.html'">
+                    <div class="report-date">September 2023</div>
+                    <div class="report-title">Business Progress: Series A Term Sheet Agreement and Due Diligence</div>
+                    <a href="reports/2023-09.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2023-10.html'">
+                    <div class="report-date">October 2023</div>
+                    <div class="report-title">Business Milestone: Series A ($15M) Closed & Taproot Assets Support Started</div>
+                    <a href="reports/2023-10.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2023-11.html'">
+                    <div class="report-date">November 2023</div>
+                    <div class="report-title">Development Progress: Implementation and Initial Testing of v1.5 in Simulation Environment</div>
+                    <a href="reports/2023-11.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2023-12.html'">
+                    <div class="report-date">December 2023</div>
+                    <div class="report-title">2023 Summary and 2024 Roadmap: Successful Pivot Amid Headwinds, Moving to Alpha Test</div>
+                    <a href="reports/2023-12.html" class="report-link">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="year-section">
+            <div class="year-header">
+                <div class="year-title">2024</div>
+                <div class="year-badge">Advantage2 Prototype & Alpha Test</div>
+            </div>
+            <div class="reports-grid">
+                <div class="report-card" onclick="window.location.href='reports/2024-01.html'">
+                    <div class="report-date">January 2024</div>
+                    <div class="report-title">R&D Update: D-Wave Advantage2 Prototype Announcement and Our Strategy</div>
+                    <a href="reports/2024-01.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2024-02.html'">
+                    <div class="report-date">February 2024</div>
+                    <div class="report-title">Technical Milestone: Early Access to Advantage2 Prototype Secured</div>
+                    <a href="reports/2024-02.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2024-03.html'">
+                    <div class="report-date">March 2024</div>
+                    <div class="report-title">Development Progress: Migration of LN-QUBO v1.5 Model to Advantage2 Prototype Complete</div>
+                    <a href="reports/2024-03.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2024-04.html'">
+                    <div class="report-date">April 2024</div>
+                    <div class="report-title">Breakthrough: 20x Time-to-Solution Speedup - Path to Near-Real-Time Optimization</div>
+                    <a href="reports/2024-04.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2024-05.html'">
+                    <div class="report-date">May 2024</div>
+                    <div class="report-title">Business Development: Negotiations with Major LSPs/Exchanges Started Based on 20x Speedup Data</div>
+                    <a href="reports/2024-05.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2024-06.html'">
+                    <div class="report-date">June 2024</div>
+                    <div class="report-title">Development Progress: Internal Demo of 'Near-Real-Time Optimization (30-Second Batch)' Developed</div>
+                    <a href="reports/2024-06.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2024-07.html'">
+                    <div class="report-date">July 2024</div>
+                    <div class="report-title">Business Milestone: Alpha Test Contracts Signed with 3 Major LSPs</div>
+                    <a href="reports/2024-07.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2024-08.html'">
+                    <div class="report-date">August 2024</div>
+                    <div class="report-title">Alpha Test Start: LN-QUBO Model Driven with Partner Real Data</div>
+                    <a href="reports/2024-08.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2024-09.html'">
+                    <div class="report-date">September 2024</div>
+                    <div class="report-title">Alpha Test Progress: Shadow Test Started and Initial Performance Report</div>
+                    <a href="reports/2024-09.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2024-10.html'">
+                    <div class="report-date">October 2024</div>
+                    <div class="report-title">Analysis Report: Shadow Test Results - Simulation Superiority Confirmed in Real Environment</div>
+                    <a href="reports/2024-10.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2024-11.html'">
+                    <div class="report-date">November 2024</div>
+                    <div class="report-title">R&D Update: Fine-Tuning of v1.5 Model Based on Partner Feedback</div>
+                    <a href="reports/2024-11.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2024-12.html'">
+                    <div class="report-date">December 2024</div>
+                    <div class="report-title">2024 Summary: Alpha Test Success. 2025 Research & Open Source Plan Formulated</div>
+                    <a href="reports/2024-12.html" class="report-link">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="year-section">
+            <div class="year-header">
+                <div class="year-title">2025</div>
+                <div class="year-badge">Research & Open Source</div>
+            </div>
+            <div class="reports-grid">
+                <div class="report-card" onclick="window.location.href='reports/2025-01.html'">
+                    <div class="report-date">January 2025</div>
+                    <div class="report-title">Research Preparation: Development of 'Plugin API v0.9' for LND/CLN</div>
+                    <a href="reports/2025-01.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2025-02.html'">
+                    <div class="report-date">February 2025</div>
+                    <div class="report-title">Research Development: Open Source Project 'Pathfinder-Q' Announcement and Research Collaboration Discussions</div>
+                    <a href="reports/2025-02.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2025-03.html'">
+                    <div class="report-date">March 2025</div>
+                    <div class="report-title">Research Preparation: Pathfinder-Q API v0.9 Complete and Final Testing by Partners</div>
+                    <a href="reports/2025-03.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2025-04.html'">
+                    <div class="report-date">April 2025</div>
+                    <div class="report-title">Research Progress: Research Partnerships Established with 5 Initial Partners</div>
+                    <a href="reports/2025-04.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2025-05.html'">
+                    <div class="report-date">May 2025</div>
+                    <div class="report-title">Hardware GA: Migration to Full Spec D-Wave Advantage2 (20-way Connectivity)</div>
+                    <a href="reports/2025-05.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2025-06.html'">
+                    <div class="report-date">June 2025</div>
+                    <div class="report-title">Technical Milestone: Pathfinder-Q v1.0, Problem Scale Expanded 5x Using 20-way Topology</div>
+                    <a href="reports/2025-06.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2025-07.html'">
+                    <div class="report-date">July 2025</div>
+                    <div class="report-title">Development Progress: LND Plugin v1.0 Development Complete</div>
+                    <a href="reports/2025-07.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2025-08.html'">
+                    <div class="report-date">August 2025</div>
+                    <div class="report-title">Development Progress: CLN Plugin v1.0 Development Complete</div>
+                    <a href="reports/2025-08.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2025-09.html'">
+                    <div class="report-date">September 2025</div>
+                    <div class="report-title">Research Release: 'Pathfinder-Q' v1.0 Open Source Release</div>
+                    <a href="reports/2025-09.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2025-10.html'">
+                    <div class="report-date">October 2025</div>
+                    <div class="report-title">Research Progress: Research Deployment with Partners and Taproot Assets Beta Implementation</div>
+                    <a href="reports/2025-10.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2025-11.html'">
+                    <div class="report-date">November 2025</div>
+                    <div class="report-title">R&D Update: Taproot Assets Multi-Asset Routing Beta Limited Release</div>
+                    <a href="reports/2025-11.html" class="report-link">View Details</a>
+                </div>
+                <div class="report-card" onclick="window.location.href='reports/2025-12.html'">
+                    <div class="report-date">December 2025</div>
+                    <div class="report-title">2025 Summary: Research Collaboration Results - 70% Routing Failure Rate Reduction, 30% Performance Improvement</div>
+                    <a href="reports/2025-12.html" class="report-link">View Details</a>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2025 QuantumLightning. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
+
